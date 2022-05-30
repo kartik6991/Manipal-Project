@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +21,6 @@ import com.example.demo.exception.CustomerException;
 import com.example.demo.exception.MobileException;
 import com.example.demo.service.ICartService;
 
-
 @CrossOrigin(value="http://localhost:3000/")
 @RestController
 @RequestMapping("api")
@@ -29,17 +30,17 @@ public class CartController {
 	private ICartService cartService;
 	
 	@PostMapping("cart")
-	public Cart addToCart(@RequestBody CartDTO cartDTO) throws CustomerException,MobileException{
+	public Cart addToCart(@Valid @RequestBody CartDTO cartDTO) throws CustomerException,MobileException{
 		return this.cartService.addMobileToCart(cartDTO);
 	}
 	
-	@DeleteMapping("cart")
-	public Cart deleteMobileItemsfromCart(@RequestBody CartDTO cartDTO) throws CustomerException,MobileException{
-		return this.cartService.deleteMobileItemsfromCart(cartDTO);
+	@GetMapping("cart/{id}")
+	public List<Mobile> displayCartById(@PathVariable("id") String customerid) throws CustomerException{
+		return this.cartService.displayCartByCustomerId(customerid);
 	}
 	
-	@GetMapping("cart/{id}")
-	public List<Mobile> displayCart(@PathVariable("id") String customerid) throws CustomerException{
-		return this.cartService.displayCartByCustomerId(customerid);
+	@PostMapping("cartDTO")
+	public Cart deletemobiles(@Valid @RequestBody CartDTO cartDTO) throws CustomerException,MobileException{
+		return this.cartService.deleteMobileItemsfromCart(cartDTO);
 	}
 }
